@@ -1,0 +1,13 @@
+body {
+    font-family: 'Noto Sans JP', sans-serif;
+}
+
+
+.card-body {
+    text-align: center;
+}
+
+.card-body .card-text {
+    font-size: 2rem;
+    font-weight: bold;
+}
