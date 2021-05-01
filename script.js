@@ -1,10 +1,12 @@
+import { baseURL, apiKey, apiHost } from "./secret.js";
+
+// World Data
 const totalCases = document.querySelector(".total-cases .card-text");
 const newCases = document.querySelector(".new-cases .card-text");
 const totalDeaths = document.querySelector(".total-deaths .card-text");
 const newDeaths = document.querySelector(".new-deaths .card-text");
 const totalRecovered = document.querySelector(".total-recovered .card-text");
 const newRecovered = document.querySelector(".new-recovered .card-text");
-const country = document.querySelector(".countries table tbody tr");
 // const inputSearch = document.querySelector("input[type=search]");
 // const searchBtn = document.querySelector(".searchBtn");
 // searchBtn.addEventListener("click", async function (e) {
@@ -16,20 +18,13 @@ const country = document.querySelector(".countries table tbody tr");
 // 	setSearchCountry(searchCountry);
 // });
 
-// Pagination
+// Countries Data
+const country = document.querySelector(".countries table tbody tr");
 const countryTable = document.querySelector("#country tbody");
 const paginationEl = document.querySelector(".pagination-wrapper");
 
 let currentPage = 1;
 let rows = 10;
-
-// API
-const baseURL =
-	"https://vaccovid-coronavirus-vaccine-and-treatment-tracker.p.rapidapi.com/api/npm-covid-data/";
-// Headers
-const apiKey = "7c6404605dmsh344fd9fbc98d979p1afdc8jsn4fdc67d10aa5";
-const apiHost =
-	"vaccovid-coronavirus-vaccine-and-treatment-tracker.p.rapidapi.com";
 
 window.addEventListener("load", async function () {
 	const resultsGlobal = await getCovidWorldData();
@@ -56,7 +51,6 @@ function getCovidWorldData() {
 }
 
 function displayCovidWorldData(response) {
-	// console.log(response);
 	totalCases.innerHTML = response.TotalCases;
 	newCases.innerHTML = response.NewCases;
 	totalDeaths.innerHTML = response.TotalDeaths;
