@@ -3,14 +3,16 @@ body {
     scroll-behavior: smooth;
 }
 
-.navbar {
+.navbar,
+footer {
     background-color: #aa2ee6 !important;
     font-weight: bold;
 }
 
 .alert {
-    background-color: #fea82f !important;
+    background-color: #fcab39 !important;
     font-weight: 500;
+    text-shadow: 1px 1px 1px rgb(19, 18, 18);
 }
 
 .card-body {
@@ -22,10 +24,6 @@ body {
     font-weight: bold;
 }
 
-.countries table tbody {
-    height: 500px !important;
-}
-
 
 .countries table tbody tr:hover {
     background-color: #e84545;
@@ -35,7 +33,7 @@ body {
 .page-item {
     background-color: #259237;
     color: #fff;
-    padding: 0.8rem;
+    padding: 0.5rem 0.8rem;
     cursor: pointer;
     margin: 0.5rem 0.3rem;
     border-radius: 0.3rem;

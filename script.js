@@ -30,9 +30,30 @@ window.addEventListener("load", async function () {
 	const resultsGlobal = await getCovidWorldData();
 	displayCovidWorldData(resultsGlobal);
 	const resultsCountries = await getCovidCountriesData();
-	// generateTable(resultsCountries);
 	DisplayDataEveryCountry(resultsCountries, countryTable, rows, currentPage);
 	Pagination(resultsCountries, paginationEl, rows);
+});
+
+document.addEventListener("click", async function (e) {
+	if (e.target.classList.contains("btn-detail")) {
+		// get data attributes
+		let countryname = e.target.dataset.countryname;
+		let threeletter = e.target.dataset.threeletter;
+		let detail = await getDetailCoountry(countryname, threeletter);
+		updateUIModal(detail);
+
+		const closeModalBtn = document.querySelector(".close span");
+		closeModalBtn.addEventListener("click", function () {
+			// loading state
+			const numbers = document.querySelectorAll(".number");
+			numbers.forEach((n) => (n.innerText = "Loading..."));
+
+			const modalTitle = document.querySelector(".modal-title");
+			setTimeout(() => {
+				modalTitle.innerHTML = "Loading...";
+			}, 500);
+		});
+	}
 });
 
 function getCovidWorldData() {
@@ -89,7 +110,8 @@ function DisplayDataEveryCountry(items, wrapper, rows_per_page, page) {
 		<td class="data-country">${item.TotalDeaths}</td>
 		<td class="data-country">${item.TotalRecovered}</td>
 		<td class="data-country">
-		<button type="button" class="btn btn-primary">Details</button>
+		<button type="button" class="btn btn-primary btn-detail" data-toggle="modal"
+		data-target="#detailModal" data-countryname="${item.Country}" data-threeletter="${item.ThreeLetterSymbol}">Details</button>
 		</td>`;
 		// insert to table
 		country.insertAdjacentHTML("beforebegin", countries);
@@ -131,9 +153,9 @@ function PaginationBtn(page, items) {
 	return btn;
 }
 
-function getCovidDetailCoountry(data) {
+function getDetailCoountry(countryName, threeLetterSymbol) {
 	return fetch(
-		`${baseURL}country-report-iso-based/${data.Country}/${ThreeLetterSymbol}`,
+		`${baseURL}country-report-iso-based/${countryName}/${threeLetterSymbol}`,
 		{
 			method: "GET",
 			headers: {
@@ -143,7 +165,59 @@ function getCovidDetailCoountry(data) {
 		}
 	)
 		.then((response) => response.json())
-		.then((response) => console.log(response));
+		.then((response) => response[0]);
+}
+
+function updateUIModal(data) {
+	// console.log(data);
+	const modalTitle = document.querySelector(".modal-title");
+	modalTitle.innerHTML = data.Country;
+
+	const nTotalCases = document.querySelector(".modal-totalcases .number");
+	nTotalCases.innerHTML = data.TotalCases;
+
+	const nNewCases = document.querySelector(".modal-newcases .number");
+	nNewCases.innerHTML = data.NewCases;
+
+	const nActiveCases = document.querySelector(".modal-activecases .number");
+	nActiveCases.innerHTML = data.ActiveCases;
+
+	const nInfectionRisk = document.querySelector(".modal-infection .number");
+	nInfectionRisk.innerHTML = `${data.Infection_Risk}%`;
+
+	const nCritical = document.querySelector(".modal-critical .number");
+	nCritical.innerHTML = data.Serious_Critical;
+
+	const nTotalTests = document.querySelector(".modal-totaltest .number");
+	nTotalTests.innerHTML = data.TotalTests;
+
+	const nTestPercentage = document.querySelector(
+		".modal-testpercentage .number"
+	);
+	nTestPercentage.innerHTML = `${data.Test_Percentage}%`;
+
+	const nTotalDeaths = document.querySelector(".modal-totaldeaths .number");
+	nTotalDeaths.innerHTML = data.TotalDeaths;
+
+	const nNewDeaths = document.querySelector(".modal-newdeaths .number");
+	nNewDeaths.innerHTML = data.NewDeaths;
+
+	const nCFR = document.querySelector(".modal-cfr .number");
+	nCFR.innerHTML = `${data.Case_Fatality_Rate}%`;
+
+	const nTotalRecovered = document.querySelector(
+		".modal-totalrecovered .number"
+	);
+	nTotalRecovered.innerHTML = data.TotalRecovered;
+
+	const nNewRecovered = document.querySelector(".modal-newrecovered .number");
+	nNewRecovered.innerHTML = data.NewRecovered;
+
+	const nRP = document.querySelector(".modal-rp .number");
+	nRP.innerHTML = `${data.Recovery_Proporation}%`;
+
+	const nPopulation = document.querySelector(".modal-population .number");
+	nPopulation.innerHTML = data.Population;
 }
 
 function searchCountry(data) {
