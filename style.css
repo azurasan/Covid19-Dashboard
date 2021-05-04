@@ -5,12 +5,12 @@ body {
 
 .navbar,
 footer {
-    background-color: #aa2ee6 !important;
+    background-color: #8c21c2 !important;
     font-weight: bold;
 }
 
 .alert {
-    background-color: #fcab39 !important;
+    background-color: #dd8724 !important;
     font-weight: 500;
     text-shadow: 1px 1px 1px rgb(19, 18, 18);
 }
@@ -23,7 +23,6 @@ footer {
     font-size: 2rem;
     font-weight: bold;
 }
-
 
 .countries table tbody tr:hover {
     background-color: #e84545;
