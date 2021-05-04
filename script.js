@@ -7,6 +7,7 @@ const totalDeaths = document.querySelector(".total-deaths .card-text");
 const newDeaths = document.querySelector(".new-deaths .card-text");
 const totalRecovered = document.querySelector(".total-recovered .card-text");
 const newRecovered = document.querySelector(".new-recovered .card-text");
+const worldChart = document.querySelector("#worldChart").getContext("2d");
 // const inputSearch = document.querySelector("input[type=search]");
 // const searchBtn = document.querySelector(".searchBtn");
 // searchBtn.addEventListener("click", async function (e) {
@@ -29,6 +30,7 @@ let rows = 10;
 window.addEventListener("load", async function () {
 	const resultsGlobal = await getCovidWorldData();
 	displayCovidWorldData(resultsGlobal);
+	pieChart(worldChart, resultsGlobal);
 	const resultsCountries = await getCovidCountriesData();
 	DisplayDataEveryCountry(resultsCountries, countryTable, rows, currentPage);
 	Pagination(resultsCountries, paginationEl, rows);
@@ -71,13 +73,14 @@ function getCovidWorldData() {
 		});
 }
 
+// use toLocaleString to insert comma every 3 digits
 function displayCovidWorldData(response) {
-	totalCases.innerHTML = response.TotalCases;
-	newCases.innerHTML = response.NewCases;
-	totalDeaths.innerHTML = response.TotalDeaths;
-	newDeaths.innerHTML = response.NewDeaths;
-	totalRecovered.innerHTML = response.TotalRecovered;
-	newRecovered.innerHTML = response.NewRecovered;
+	totalCases.innerHTML = response.TotalCases.toLocaleString();
+	newCases.innerHTML = response.NewCases.toLocaleString();
+	totalDeaths.innerHTML = response.TotalDeaths.toLocaleString();
+	newDeaths.innerHTML = response.NewDeaths.toLocaleString();
+	totalRecovered.innerHTML = Number(response.TotalRecovered).toLocaleString();
+	newRecovered.innerHTML = response.NewRecovered.toLocaleString();
 }
 
 function getCovidCountriesData() {
@@ -106,12 +109,14 @@ function DisplayDataEveryCountry(items, wrapper, rows_per_page, page) {
 	paginatedItems.forEach((item) => {
 		let countries = `<td class="data-country">${item.rank}</td>
 		<td class="data-country">${item.Country}</td>
-		<td class="data-country">${item.TotalCases}</td>
-		<td class="data-country">${item.TotalDeaths}</td>
-		<td class="data-country">${item.TotalRecovered}</td>
+		<td class="data-country">${item.TotalCases.toLocaleString()}</td>
+		<td class="data-country">${item.TotalDeaths.toLocaleString()}</td>
+		<td class="data-country">${Number(item.TotalRecovered).toLocaleString()}</td>
 		<td class="data-country">
 		<button type="button" class="btn btn-primary btn-detail" data-toggle="modal"
-		data-target="#detailModal" data-countryname="${item.Country}" data-threeletter="${item.ThreeLetterSymbol}">Details</button>
+		data-target="#detailModal" data-countryname="${
+			item.Country
+		}" data-threeletter="${item.ThreeLetterSymbol}">Details</button>
 		</td>`;
 		// insert to table
 		country.insertAdjacentHTML("beforebegin", countries);
@@ -174,22 +179,22 @@ function updateUIModal(data) {
 	modalTitle.innerHTML = data.Country;
 
 	const nTotalCases = document.querySelector(".modal-totalcases .number");
-	nTotalCases.innerHTML = data.TotalCases;
+	nTotalCases.innerHTML = data.TotalCases.toLocaleString();
 
 	const nNewCases = document.querySelector(".modal-newcases .number");
-	nNewCases.innerHTML = data.NewCases;
+	nNewCases.innerHTML = data.NewCases.toLocaleString();
 
 	const nActiveCases = document.querySelector(".modal-activecases .number");
-	nActiveCases.innerHTML = data.ActiveCases;
+	nActiveCases.innerHTML = data.ActiveCases.toLocaleString();
 
 	const nInfectionRisk = document.querySelector(".modal-infection .number");
 	nInfectionRisk.innerHTML = `${data.Infection_Risk}%`;
 
 	const nCritical = document.querySelector(".modal-critical .number");
-	nCritical.innerHTML = data.Serious_Critical;
+	nCritical.innerHTML = data.Serious_Critical.toLocaleString();
 
 	const nTotalTests = document.querySelector(".modal-totaltest .number");
-	nTotalTests.innerHTML = data.TotalTests;
+	nTotalTests.innerHTML = Number(data.TotalTests).toLocaleString();
 
 	const nTestPercentage = document.querySelector(
 		".modal-testpercentage .number"
@@ -197,10 +202,10 @@ function updateUIModal(data) {
 	nTestPercentage.innerHTML = `${data.Test_Percentage}%`;
 
 	const nTotalDeaths = document.querySelector(".modal-totaldeaths .number");
-	nTotalDeaths.innerHTML = data.TotalDeaths;
+	nTotalDeaths.innerHTML = data.TotalDeaths.toLocaleString();
 
 	const nNewDeaths = document.querySelector(".modal-newdeaths .number");
-	nNewDeaths.innerHTML = data.NewDeaths;
+	nNewDeaths.innerHTML = data.NewDeaths.toLocaleString();
 
 	const nCFR = document.querySelector(".modal-cfr .number");
 	nCFR.innerHTML = `${data.Case_Fatality_Rate}%`;
@@ -208,16 +213,16 @@ function updateUIModal(data) {
 	const nTotalRecovered = document.querySelector(
 		".modal-totalrecovered .number"
 	);
-	nTotalRecovered.innerHTML = data.TotalRecovered;
+	nTotalRecovered.innerHTML = Number(data.TotalRecovered).toLocaleString();
 
 	const nNewRecovered = document.querySelector(".modal-newrecovered .number");
-	nNewRecovered.innerHTML = data.NewRecovered;
+	nNewRecovered.innerHTML = data.NewRecovered.toLocaleString();
 
 	const nRP = document.querySelector(".modal-rp .number");
 	nRP.innerHTML = `${data.Recovery_Proporation}%`;
 
 	const nPopulation = document.querySelector(".modal-population .number");
-	nPopulation.innerHTML = data.Population;
+	nPopulation.innerHTML = Number(data.Population).toLocaleString();
 }
 
 function searchCountry(data) {
@@ -237,4 +242,37 @@ function setSearchCountry(data) {
 	</td>
 </tr>`;
 	country.innerHTML = resultSearch;
+}
+
+function pieChart(wrapper, data) {
+	let worldPieChart = new Chart(wrapper, {
+		type: "pie",
+		data: {
+			labels: ["Total Deaths", "Total Recovered", "Active Cases"],
+			datasets: [
+				{
+					label: "The condition of all cases in the world",
+					data: [data.TotalDeaths, data.TotalRecovered, data.ActiveCases],
+					backgroundColor: [
+						"rgb(220, 53, 69)",
+						"rgb(40, 167, 69)",
+						"rgb(255, 205, 86)",
+					],
+					hoverOffset: 4,
+				},
+			],
+		},
+		options: {
+			plugins: {
+				title: {
+					display: true,
+					text: "The condition of all cases in the world",
+					padding: {
+						top: 20,
+						bottom: 15,
+					},
+				},
+			},
+		},
+	});
 }
