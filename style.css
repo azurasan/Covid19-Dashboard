@@ -1,6 +1,9 @@
+* {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: 'Noto Sans JP', sans-serif;
-    scroll-behavior: smooth;
 }
 
 .navbar,
@@ -30,7 +33,7 @@ footer {
 }
 
 .page-item {
-    background-color: #259237;
+    background-color: #2ecc71;
     color: #fff;
     padding: 0.5rem 0.8rem;
     cursor: pointer;
