@@ -46,3 +46,18 @@ footer {
 .page-item:hover {
     background-color: #e48f0f;
 }
+
+.loading {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    line-height: 100px;
+}
+
+.spinner-border {
+    width: 3rem;
+    height: 3rem;
+    position: absolute;
+    margin-top: 1rem;
+    left: 50%;
+}

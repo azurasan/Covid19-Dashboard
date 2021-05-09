@@ -11,16 +11,6 @@ const newDeaths = document.querySelector(".new-deaths .card-text");
 const totalRecovered = document.querySelector(".total-recovered .card-text");
 const newRecovered = document.querySelector(".new-recovered .card-text");
 const worldChart = document.querySelector("#worldChart").getContext("2d");
-// const inputSearch = document.querySelector("input[type=search]");
-// const searchBtn = document.querySelector(".searchBtn");
-// searchBtn.addEventListener("click", async function (e) {
-// 	e.preventDefault();
-// 	const getSearchCountry = await getCovidCountriesData();
-// console.log(searchCountry);
-// 	const resultSearchCountry = searchCountry(getSearchCountry);
-// 	console.log(resultSearchCountry);
-// 	setSearchCountry(searchCountry);
-// });
 
 // Countries Data
 const country = document.querySelector(".countries table tbody tr");
@@ -229,25 +219,6 @@ function updateUIModal(data) {
 
 	const nPopulation = document.querySelector(".modal-population .number");
 	nPopulation.innerHTML = Number(data.Population).toLocaleString();
-}
-
-function searchCountry(data) {
-	let resultSearch = data.filter((d) => d.Country == inputSearch.value);
-	return resultSearch;
-}
-
-function setSearchCountry(data) {
-	let resultSearch = `<tr>
-	<th scope="row" class="text-center">${data.rank}</th>
-	<td>${data.Country}</td>
-	<td>${data.TotalCases}</td>
-	<td>${data.TotalDeaths}</td>
-	<td>${data.TotalRecovered}</td>
-	<td>
-	<button type="button" class="btn btn-primary">Details</button>
-	</td>
-</tr>`;
-	country.innerHTML = resultSearch;
 }
 
 function pieChart(wrapper, data) {
