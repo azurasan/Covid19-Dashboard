@@ -1,7 +1,9 @@
 import { baseURL, apiKey, apiHost } from "./secret.js";
 
 // Initialize AOS
-AOS.init();
+AOS.init({
+	once: true,
+});
 
 // World Data
 const totalCases = document.querySelector(".total-cases .card-text");
@@ -18,7 +20,8 @@ const countryTable = document.querySelector("#country tbody");
 const paginationEl = document.querySelector(".pagination-wrapper");
 const countryChart = document.querySelector("#countryChart");
 const spinner = document.querySelector(".loading");
-
+let countryPieChart;
+// Pagination
 let currentPage = 1;
 let rows = 10;
 
@@ -38,10 +41,12 @@ document.addEventListener("click", async function (e) {
 		let countryname = e.target.dataset.countryname;
 		let threeletter = e.target.dataset.threeletter;
 		let detail = await getDetailCoountry(countryname, threeletter);
+		pieChartCountry(countryChart, detail);
 		updateUIModal(detail);
 
 		const closeModalBtn = document.querySelector(".close span");
 		closeModalBtn.addEventListener("click", function () {
+			countryPieChart.destroy();
 			// loading state
 			const numbers = document.querySelectorAll(".number");
 			numbers.forEach((n) => (n.innerText = "Loading..."));
@@ -170,7 +175,6 @@ function getDetailCoountry(countryName, threeLetterSymbol) {
 }
 
 function updateUIModal(data) {
-	// console.log(data);
 	const modalTitle = document.querySelector(".modal-title");
 	modalTitle.innerHTML = data.Country;
 
@@ -244,6 +248,39 @@ function pieChart(wrapper, data) {
 				title: {
 					display: true,
 					text: "The condition of all cases in the world",
+					padding: {
+						top: 20,
+						bottom: 15,
+					},
+				},
+			},
+		},
+	});
+}
+
+function pieChartCountry(wrapper, data) {
+	countryPieChart = new Chart(wrapper, {
+		type: "pie",
+		data: {
+			labels: ["Total Deaths", "Total Recovered", "Active Cases"],
+			datasets: [
+				{
+					label: "The condition of all cases",
+					data: [data.TotalDeaths, data.TotalRecovered, data.ActiveCases],
+					backgroundColor: [
+						"rgb(220, 53, 69)",
+						"rgb(40, 167, 69)",
+						"rgb(255, 205, 86)",
+					],
+					hoverOffset: 4,
+				},
+			],
+		},
+		options: {
+			plugins: {
+				title: {
+					display: true,
+					text: "The condition of all cases",
 					padding: {
 						top: 20,
 						bottom: 15,
