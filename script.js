@@ -265,7 +265,7 @@ function pieChartCountry(wrapper, data) {
 			labels: ["Total Deaths", "Total Recovered", "Active Cases"],
 			datasets: [
 				{
-					label: "The condition of all cases in the world",
+					label: "The condition of all cases",
 					data: [data.TotalDeaths, data.TotalRecovered, data.ActiveCases],
 					backgroundColor: [
 						"rgb(220, 53, 69)",
@@ -280,7 +280,7 @@ function pieChartCountry(wrapper, data) {
 			plugins: {
 				title: {
 					display: true,
-					text: "The condition of all cases in the world",
+					text: "The condition of all cases",
 					padding: {
 						top: 20,
 						bottom: 15,
