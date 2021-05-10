@@ -1,7 +1,9 @@
 import { baseURL, apiKey, apiHost } from "./secret.js";
 
 // Initialize AOS
-AOS.init();
+AOS.init({
+	once: true,
+});
 
 // World Data
 const totalCases = document.querySelector(".total-cases .card-text");
